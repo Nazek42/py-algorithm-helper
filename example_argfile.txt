@@ -1,0 +1,3 @@
+50
+1:100
+[sorted(list(range(?)), key=lambda x:random.random())]

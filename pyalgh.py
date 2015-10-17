@@ -24,6 +24,7 @@ import matplotlib.pyplot as pp
 import numpy as np
 from time import perf_counter
 import random
+from json import dumps
 
 def main():
     try:
@@ -41,7 +42,7 @@ def main():
         sys.exit()
     
     # This is pretty hacky, but there's no better solution..?
-    func = eval("{0}.{1}".format(module.__name__,funcname))
+    func = eval("module.{0}".format(funcname))
     
     try:
         with open(argspath) as argfile:
@@ -53,18 +54,20 @@ def main():
     x = []
     y = []
     for n in range(start, stop, step):
-        timing = []
+        timings = []
         for i in range(rigor):
-            timings += timeme(func, *eval(expr), **kwargs)
+            args = eval(expr)
+            timings.append(timeme(func, args, kwargs) * 1000)
         x.append(n)
         y.append(sum(timings) / rigor)
     
     pp.plot(x, y)
     pp.xlabel('n')
-    pp.ylabel('Time Taken')
-    pp.show()        
+    pp.ylabel('Time Taken (ms)')
+    pp.show()
+    sys.stdout.write(dumps(list(zip(x, y))))
 
-def timeme(function, *args, **kwargs):
+def timeme(function, args, kwargs):
     t1 = perf_counter()
     function(*args, **kwargs)
     t2 = perf_counter()
@@ -88,6 +91,7 @@ def read_args(file):
     else:
         start, stop = map(int,text[1].split(':'))
         step = 1
+    line = text[2]
     expr = text[2].replace('?', 'n')
     for line in text[3:]:
         key, value = line.split('=')

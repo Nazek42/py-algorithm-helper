@@ -1,3 +1,3 @@
 50
 1:100
-[sorted(list(range(?)), key=lambda x:random.random())]
+[map(chr, [random.choice(32, 127) for i in range(N)])]

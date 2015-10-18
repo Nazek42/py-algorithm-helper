@@ -53,16 +53,16 @@ def main():
     
     x = []
     y = []
-    for n in range(start, stop, step):
+    for N in range(start, stop, step):
         timings = []
         for i in range(rigor):
             args = eval(expr)
             timings.append(timeme(func, args, kwargs) * 1000)
-        x.append(n)
+        x.append(N)
         y.append(sum(timings) / rigor)
     
     pp.plot(x, y)
-    pp.xlabel('n')
+    pp.xlabel('N')
     pp.ylabel('Time Taken (ms)')
     pp.show()
     sys.stdout.write(dumps(list(zip(x, y))))
@@ -91,8 +91,7 @@ def read_args(file):
     else:
         start, stop = map(int,text[1].split(':'))
         step = 1
-    line = text[2]
-    expr = text[2].replace('?', 'n')
+    expr = text[2]
     for line in text[3:]:
         key, value = line.split('=')
         kwargs[key] = value
